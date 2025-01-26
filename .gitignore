@@ -1,0 +1,64 @@
+# Virtual environments
+venv/
+.env/
+.venv/
+env/
+*.env
+.*_env/
+
+# Python artifacts
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Logs and debug files
+*.log
+*.sql
+*.sqlite3
+
+# Installed libraries
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test and coverage files
+.coverage
+.tox/
+.nox/
+.cache/
+pytest_cache/
+htmlcov/
+*.cover
+.hypothesis/
+
+# IDEs/Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Documentation generated files
+docs/_build/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Wheel files and distributions
+*.whl
+
+# macOS-specific files
+._*
+.Spotlight-V100
+.Trashes

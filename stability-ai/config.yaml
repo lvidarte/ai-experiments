@@ -1,0 +1,19 @@
+# DigitalOcean datacenter region slug (str).
+# Full detail here: https://docs.digitalocean.com/platform/regional-availability/
+digitalocean_region: nyc2
+
+# List of (int) protected droplets IDs.
+protected_droplets: [
+  463310454, # stg-cloutfit
+]
+
+# List of (str) protected volumes IDs.
+protected_volumes: [
+  "5cebc54e-dac1-11ef-b1a6-0a58ac140025", # models01
+]
+
+# JSON indentation level (int) for raw outputs.
+json_indent: 4
+
+# Action ping interval (float) in seconds.
+ping_interval: 1
