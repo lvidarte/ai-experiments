@@ -36,15 +36,23 @@ write_files:
     permissions: '0755'
     content: |
       #!/bin/bash
-      set -e
       cd /app/generative-models
       source .pt2/bin/activate
-      echo "======================================"
-      echo "Running the simple video sample script"
-      echo "======================================"
-      python3 scripts/sampling/simple_video_sample_4d.py \
-         --input_path assets/sv4d_videos/test_video1.mp4 \
-         --output_folder outputs/${HOSTNAME}_$(date +%Y%m%d_%H%M%S)
+      IMAGES_DIR="/mnt/assets/images"
+      for version in sv3d_u sv3d_p; do
+        for filepath in $(ls -1 $IMAGES_DIR); do
+          filename=$(basename $filepath)
+          output_folder="outputs/${HOSTNAME}/${version}/${filename//./_}"
+          echo
+          echo "================================================================================="
+          echo "Generating video $version for $filepath"
+          echo "================================================================================="
+          python3 scripts/sampling/simple_video_sample.py \
+            --input_path $filepath \
+            --version $version \
+            --output_folder $output_folder
+        done
+      done
       deactivate
 
 runcmd:

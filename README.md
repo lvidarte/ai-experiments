@@ -27,7 +27,9 @@ Export the `DIGITALOCEAN_TOKEN` environment variable with your token, ensuring i
 
 ---
 
-## Usage
+## Stability-AI / generative-models
+
+Repo: [https://github.com/Stability-AI/generative-models](https://github.com/Stability-AI/generative-models)
 
 For creating a droplet and run the stability-ai models
 
