@@ -1,0 +1,13 @@
+{
+    "name": null,
+    "region": null,
+    "size": "s-1vcpu-2gb",
+    "image": "ubuntu-22-04-x64",
+    "ssh_keys": [45041633],
+    "backups": false,
+    "ipv6": false,
+    "monitoring": false,
+    "tags": ["ai:dev"],
+    "user_data": null,
+    "volumes": ["5cebc54e-dac1-11ef-b1a6-0a58ac140025"]
+}

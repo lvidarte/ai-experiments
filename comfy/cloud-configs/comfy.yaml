@@ -1,0 +1,53 @@
+#cloud-config
+package_update: true
+packages:
+  - git
+  - python3
+  - python3-venv
+  - python3-pip
+  - tree
+  - htop
+  - libgl1
+
+mounts:
+  - [ "/dev/disk/by-id/scsi-0DO_Volume_models01", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
+
+write_files:
+  # Add the setup_venv.sh script to the /app directory
+  - path: /usr/local/bin/run_comfy.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      cd /app/ComfyUI
+      echo "-------------------------------------"
+      echo "Creating virtual environment"
+      echo "-------------------------------------"
+      python3 -m venv .env
+      source .env/bin/activate
+      python3 -m pip install --upgrade pip
+      python3 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
+      python3 -m pip install -r requirements.txt
+      echo "-------------------------------------"
+      echo "Running comfy"
+      echo "-------------------------------------"
+      python3 main.py --listen=0.0.0.0 --port=5000
+  
+runcmd:
+  # Create the /app directory
+  - mkdir -p /app
+
+  # Clone the repository from Stability AI
+  - git clone https://github.com/comfyanonymous/ComfyUI /app/ComfyUI
+
+  # Create symbolic links to the mounted volume
+  - rm -r /app/ComfyUI/models/text_encoders
+  - ln -s /mnt/comfy/models/text_encoders /app/ComfyUI/models/text_encoders
+  - rm -r /app/ComfyUI/models/vae
+  - ln -s /mnt/comfy/models/vae /app/ComfyUI/models/vae
+  - rm -r /app/ComfyUI/models/diffusion_models
+  - ln -s /mnt/comfy/models/diffusion_models /app/ComfyUI/models/diffusion_models
+  - rm -r /app/ComfyUI/output
+  - ln -s /mnt/comfy/output /app/ComfyUI/output
+
+  # Launch comfy
+  - /usr/local/bin/run_comfy.sh

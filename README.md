@@ -27,6 +27,17 @@ Export the `DIGITALOCEAN_TOKEN` environment variable with your token, ensuring i
 
 ---
 
+## ComfyUI
+
+Starts an H100 droplet machine with the models for Nvidia Cosmos
+
+```bash
+cd comfy
+./run-comfy.sh
+```
+
+---
+
 ## Stability-AI / generative-models
 
 Repo: [https://github.com/Stability-AI/generative-models](https://github.com/Stability-AI/generative-models)
