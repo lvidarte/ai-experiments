@@ -29,7 +29,7 @@ Export the `DIGITALOCEAN_TOKEN` environment variable with your token, ensuring i
 
 ## ComfyUI
 
-Starts an H100 droplet machine with the models for Nvidia Cosmos
+Starts an H100 droplet machine with ComfyUI and the Nvidia Cosmos models.
 
 ```bash
 cd comfy

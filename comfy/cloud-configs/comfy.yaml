@@ -8,30 +8,75 @@ packages:
   - tree
   - htop
   - libgl1
+  - ffmpeg
 
 mounts:
   - [ "/dev/disk/by-id/scsi-0DO_Volume_models01", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
 
 write_files:
-  # Add the setup_venv.sh script to the /app directory
-  - path: /usr/local/bin/run_comfy.sh
+  # Create the virtual environment
+  - path: /usr/local/bin/create_env.sh
     permissions: '0755'
     content: |
       #!/bin/bash
-      cd /app/ComfyUI
       echo "-------------------------------------"
       echo "Creating virtual environment"
       echo "-------------------------------------"
+      cd /app/ComfyUI
       python3 -m venv .env
       source .env/bin/activate
       python3 -m pip install --upgrade pip
       python3 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
       python3 -m pip install -r requirements.txt
+      deactivate
+
+  # Install custom nodes
+  - path: /usr/local/bin/install_custom_nodes.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      echo "-------------------------------------"
+      echo "Install custom nodes"
+      echo "-------------------------------------"
+      cd /app/ComfyUI
+      python3 -m venv .env
+      #
+      # ComfyUI-Manager
+      echo ">>> Install ComfyUI-Manager"
+      cd /app/ComfyUI/custom_nodes/
+      git clone https://github.com/ltdrdata/ComfyUI-Manager comfyui-manager
+      cd comfyui-manager
+      python3 -m pip install -r requirements.txt
+      #
+      # ComfyUI-KJNodes
+      echo ">>> Install ComfyUI-KJNodes"
+      cd /app/ComfyUI/custom_nodes/
+      git clone https://github.com/kijai/ComfyUI-KJNodes.git
+      cd ComfyUI-KJNodes
+      python3 -m pip install -r requirements.txt
+      #
+      # ComfyUI-VideoHelperSuite
+      echo ">>> Install ComfyUI-VideoHelperSuite"
+      cd /app/ComfyUI/custom_nodes/
+      git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
+      cd ComfyUI-VideoHelperSuite
+      python3 -m pip install -r requirements.txt
+      #
+      deactivate
+
+  # Run comfy
+  - path: /usr/local/bin/run_comfy.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
       echo "-------------------------------------"
       echo "Running comfy"
       echo "-------------------------------------"
+      cd /app/ComfyUI
+      python3 -m venv .env
       python3 main.py --listen=0.0.0.0 --port=5000
-  
+      deactivate
+
 runcmd:
   # Create the /app directory
   - mkdir -p /app
@@ -50,4 +95,6 @@ runcmd:
   - ln -s /mnt/comfy/output /app/ComfyUI/output
 
   # Launch comfy
+  - /usr/local/bin/create_env.sh
+  - /usr/local/bin/install_custom_nodes.sh
   - /usr/local/bin/run_comfy.sh
