@@ -1,8 +1,0 @@
-{
-    "name": null,
-    "size_gigabytes": 100,
-    "description": "Models volume",
-    "region": null,
-    "filesystem_type": "ext4",
-    "filesystem_label": "models"
-}
