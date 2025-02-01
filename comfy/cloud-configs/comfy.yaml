@@ -46,24 +46,16 @@ write_files:
       echo ">>> Install ComfyUI-Manager"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/ltdrdata/ComfyUI-Manager comfyui-manager
-      #cd comfyui-manager
-      #python3 -m pip install -r requirements.txt
       #
       # ComfyUI-KJNodes
       echo ">>> Install ComfyUI-KJNodes"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/kijai/ComfyUI-KJNodes.git
-      #cd ComfyUI-KJNodes
-      #python3 -m pip install -r requirements.txt
       #
       # ComfyUI-VideoHelperSuite
       echo ">>> Install ComfyUI-VideoHelperSuite"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
-      #cd ComfyUI-VideoHelperSuite
-      #python3 -m pip install -r requirements.txt
-      #
-      deactivate
 
   # Run comfy
   - path: /usr/local/bin/run_comfy.sh
@@ -85,15 +77,16 @@ runcmd:
   # Clone the repository from Stability AI
   - git clone https://github.com/comfyanonymous/ComfyUI /app/ComfyUI
 
-  # Create symbolic links to the mounted volume
-  - rm -r /app/ComfyUI/models/text_encoders
-  - ln -s /mnt/comfy/models/text_encoders /app/ComfyUI/models/text_encoders
-  - rm -r /app/ComfyUI/models/vae
-  - ln -s /mnt/comfy/models/vae /app/ComfyUI/models/vae
-  - rm -r /app/ComfyUI/models/diffusion_models
-  - ln -s /mnt/comfy/models/diffusion_models /app/ComfyUI/models/diffusion_models
-  - rm -r /app/ComfyUI/output
-  - ln -s /mnt/comfy/output /app/ComfyUI/output
+  # Create symbolic links to the models
+  - DIR="checkpoints";      rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
+  - DIR="clip_vision";      rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
+  - DIR="diffusion_models"; rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
+  - DIR="lora";             rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
+  - DIR="text_encoders";    rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
+  - DIR="vae";              rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
+
+  # Create symbolic links to the output directory
+  - DIR="output"; rm -r /app/ComfyUI/$DIR && /mnt/comfy/$DIR /app/ComfyUI/$DIR
 
   # Launch comfy
   - /usr/local/bin/create_env.sh
