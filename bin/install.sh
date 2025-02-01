@@ -21,7 +21,7 @@ if [ ! -d "$VENV_DIR" ]; then
         echo "Error: Failed to create the virtual environment."
         exit 1
     fi
-    echo "Virtual environment created successfully in $VENV_DIR."
+    echo "Virtual environment created successfully in $VENV_DIR"
 
     # Activate the virtual environment
     source "$VENV_DIR/bin/activate"
@@ -41,5 +41,5 @@ if [ ! -d "$VENV_DIR" ]; then
         echo "No requirements.txt found. Skipping dependency installation."
     fi
 else
-    echo "Virtual environment already exists in $VENV_DIR."
+    echo "Virtual environment already exists in $VENV_DIR"
 fi
