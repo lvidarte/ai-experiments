@@ -3,7 +3,7 @@
 set -e 
 
 # Define the virtual environment directory
-VENV_DIR=".ai_env"
+VENV_DIR=".env"
 
 # Check if the .venv directory exists
 if [ ! -d "$VENV_DIR" ]; then

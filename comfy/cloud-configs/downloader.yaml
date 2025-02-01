@@ -1,0 +1,69 @@
+#cloud-config
+package_update: true
+packages:
+  - git
+  - tree
+  - htop
+  - wget
+
+mounts:
+  - [ "/dev/disk/by-id/scsi-0DO_Volume_models02", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
+
+write_files:
+  # Create the downloader script
+  - path: /app/downloader.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      echo "-------------------------------------"
+      echo "Downloading files"
+      echo "-------------------------------------"
+      BASE_DIR="/mnt/comfy"
+      FILES_LIST="/app/files_list.txt"
+      cd $BASE_DIR
+      while read -r URL DEST_DIR; do
+          # Skip empty lines and lines that start with #
+          [[ -z "$URL" || "$URL" =~ ^# ]] && continue
+
+          FILE_NAME=$(basename "$URL")
+          FILE_PATH="$DEST_DIR$FILE_NAME"
+
+          mkdir -p "$DEST_DIR"
+
+          if [ -f "$FILE_PATH" ]; then
+              echo "--- Skipping $FILE_PATH (already exists)"
+          else
+              echo ">>> Downloading $FILE_PATH"
+              wget --quiet -c "$URL" -P "$DEST_DIR"
+          fi
+      done < $FILES_LIST
+      echo "-------------------------------------"
+      echo "All files downloaded!"
+      echo "-------------------------------------"
+      tree
+      du -sh /mnt
+  
+  # Create the files list
+  - path: /app/files_list.txt
+    permissions: '0644'
+    content: |
+      # Cosmos 1.0
+      https://huggingface.co/comfyanonymous/cosmos_1.0_text_encoder_and_VAE_ComfyUI/resolve/main/text_encoders/oldt5_xxl_fp8_e4m3fn_scaled.safetensors ./models/text_encoders/
+      https://huggingface.co/comfyanonymous/cosmos_1.0_text_encoder_and_VAE_ComfyUI/resolve/main/vae/cosmos_cv8x8x8_1.0.safetensors ./models/vae/
+      https://huggingface.co/mcmonkey/cosmos-1.0/resolve/main/Cosmos-1_0-Diffusion-7B-Text2World.safetensors ./models/diffusion_models/
+      https://huggingface.co/mcmonkey/cosmos-1.0/resolve/main/Cosmos-1_0-Diffusion-7B-Video2World.safetensors ./models/diffusion_models/
+
+      # Flux FP8 version
+      https://huggingface.co/Comfy-Org/flux1-dev/resolve/main/flux1-dev-fp8.safetensors ./models/checkpoints/
+      https://huggingface.co/Comfy-Org/flux1-schnell/resolve/main/flux1-schnell-fp8.safetensors ./models/checkpoints/
+      https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors ./models/vae/
+      https://huggingface.co/comfyanonymous/flux_RealismLora_converted_comfyui/resolve/main/flux_realism_lora.safetensors ./models/lora/
+
+      # SDXL ReVision: https://comfyanonymous.github.io/ComfyUI_examples/sdxl/
+      https://huggingface.co/comfyanonymous/clip_vision_g/resolve/main/clip_vision_g.safetensors ./models/clip_vision/
+
+runcmd:
+  - mkdir -p /mnt/comfy/models
+  - mkdir -p /mnt/comfy/ouput
+  - mkdir -p /app
+  - /app/downloader.sh

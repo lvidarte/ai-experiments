@@ -6,7 +6,7 @@ A repository for testing and experimenting with different AI models, frameworks,
 ## Installation
 
 ```bash
-bin/create_env.sh
+bin/install.sh
 ```
 
 ---
@@ -25,26 +25,22 @@ Export the `DIGITALOCEAN_TOKEN` environment variable with your token, ensuring i
 - **tag**: create, read, delete
 - **ssh_key**: read
 
+Also, for connecting with your droplets, you need to export the `DIGITALOCEAN_IDENTITY_FILE` with the path to the private key file.
+
 ---
 
 ## ComfyUI
 
-Starts an H100 droplet machine with ComfyUI and the Nvidia Cosmos models.
+Starts an H100 droplet machine with ComfyUI and the `models02` volume with some models.
 
 ```bash
 cd comfy
 ./run-comfy.sh
 ```
 
----
-
-## Stability-AI / generative-models
-
-Repo: [https://github.com/Stability-AI/generative-models](https://github.com/Stability-AI/generative-models)
-
-For creating a droplet and run the stability-ai models
+Starts an minimal cpu droplet for uploading models to the `models02` volume.
 
 ```bash
-cd stability-ai
-./launch-generative-models.sh
+cd comfy
+./run-uploader.sh
 ```

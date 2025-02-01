@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-DROPLET_TPL="nvidia-h100"
-DROPLET_NAME="comfy"
-CLOUD_CONFIG="comfy"
+DROPLET_TPL="cpu-mini"
+DROPLET_NAME="downloader"
+CLOUD_CONFIG="downloader"
 IDENTITY_FILE="${DIGITALOCEAN_IDENTITY_FILE:-$HOME/.ssh/id_rsa}"
 CONFIG_INIT_LOG="/var/log/cloud-init-output.log"
 

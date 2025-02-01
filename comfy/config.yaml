@@ -13,6 +13,7 @@ protected_droplets: [
 # You can't delete a protected volume.
 protected_volumes: [
   "5cebc54e-dac1-11ef-b1a6-0a58ac140025", # models01
+  "b323e810-e0b7-11ef-8b87-0a58ac140002", # models02
 ]
 
 # JSON indentation level (int) for raw outputs.

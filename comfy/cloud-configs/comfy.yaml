@@ -9,9 +9,10 @@ packages:
   - htop
   - libgl1
   - ffmpeg
+  - wget
 
 mounts:
-  - [ "/dev/disk/by-id/scsi-0DO_Volume_models01", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
+  - [ "/dev/disk/by-id/scsi-0DO_Volume_models02", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
 
 write_files:
   # Create the virtual environment
@@ -45,22 +46,22 @@ write_files:
       echo ">>> Install ComfyUI-Manager"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/ltdrdata/ComfyUI-Manager comfyui-manager
-      cd comfyui-manager
-      python3 -m pip install -r requirements.txt
+      #cd comfyui-manager
+      #python3 -m pip install -r requirements.txt
       #
       # ComfyUI-KJNodes
       echo ">>> Install ComfyUI-KJNodes"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/kijai/ComfyUI-KJNodes.git
-      cd ComfyUI-KJNodes
-      python3 -m pip install -r requirements.txt
+      #cd ComfyUI-KJNodes
+      #python3 -m pip install -r requirements.txt
       #
       # ComfyUI-VideoHelperSuite
       echo ">>> Install ComfyUI-VideoHelperSuite"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
-      cd ComfyUI-VideoHelperSuite
-      python3 -m pip install -r requirements.txt
+      #cd ComfyUI-VideoHelperSuite
+      #python3 -m pip install -r requirements.txt
       #
       deactivate
 
@@ -70,7 +71,7 @@ write_files:
     content: |
       #!/bin/bash
       echo "-------------------------------------"
-      echo "Running comfy"
+      echo "Running Comfy"
       echo "-------------------------------------"
       cd /app/ComfyUI
       python3 -m venv .env
