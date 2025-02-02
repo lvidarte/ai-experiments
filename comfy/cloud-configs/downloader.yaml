@@ -67,9 +67,12 @@ write_files:
   - path: /app/files_list.txt
     permissions: '0644'
     content: |
-      # ==============================================================================
+      # ====================================================
       # Alert: put / at the end of the destination directory
-      # ==============================================================================
+      # ====================================================
+
+      # Comfy default workflow
+      https://huggingface.co/Comfy-Org/stable-diffusion-v1-5-archive/resolve/main/v1-5-pruned-emaonly-fp16.safetensors ./models/checkpoints/
 
       # Cosmos 1.0
       # https://comfyanonymous.github.io/ComfyUI_examples/cosmos/
