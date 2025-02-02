@@ -39,3 +39,11 @@ bin/install.sh
 
   - `DIGITALOCEAN_IDENTITY_FILE` with the path to the private key file (Used by ssh).
   - `DIGITALOCEAN_KEY_ID` with your key id (Use the command `dom key list` to finds your).
+
+---
+
+## Session example
+
+```
+
+```

@@ -8,6 +8,24 @@
 DROPLET_ID=""
 DROPLET_IP=""
 SSH_CMD=""
+CONFIG_INIT_LOG="/var/log/cloud-init-output.log"
+
+
+# Check if the required environment variables are set
+if [ -z "$DIGITALOCEAN_TOKEN" ]; then
+    echo "DIGITALOCEAN_TOKEN is not set."
+    exit 1
+fi
+
+if [ -z "$DIGITALOCEAN_KEY_ID" ]; then
+    echo "DIGITALOCEAN_KEY_ID is not set."
+    exit 1
+fi
+
+if [ -z "$DIGITALOCEAN_IDENTITY_FILE" ]; then
+    echo "DIGITALOCEAN_IDENTITY_FILE is not set."
+    exit 1
+fi
 
 
 # Echo a separator line
@@ -47,7 +65,7 @@ function get_droplet_ip() {
 function get_ssh_cmd() {
     if [ "$SSH_CMD" == "" ]; then
         local droplet_ip=$(get_droplet_ip)
-        SSH_CMD="ssh -i $IDENTITY_FILE root@$droplet_ip"
+        SSH_CMD="ssh -i $DIGITALOCEAN_IDENTITY_FILE root@$droplet_ip"
     fi
 
     echo "$SSH_CMD"

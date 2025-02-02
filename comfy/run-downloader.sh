@@ -1,12 +1,9 @@
 #!/bin/bash
-#set -e
 
 DROPLET_TYPE="cpu"
 DROPLET_TPL="cpu-mini"
 DROPLET_NAME="downloader"
 CLOUD_CONFIG="downloader"
-IDENTITY_FILE="${DIGITALOCEAN_IDENTITY_FILE:-$HOME/.ssh/id_rsa}"
-CONFIG_INIT_LOG="/var/log/cloud-init-output.log"
 
 # Source the session functions
 source ./session.sh
@@ -17,14 +14,9 @@ source ../.env/bin/activate
 # ------------------
 # Create the droplet
 # ------------------
-# Export your SSH key ID to the environment variable DIGITALOCEAN_KEY_ID
-# Use the command `dom key list` to get the ID.
-PARAMS=""
-if [[ -n "$DIGITALOCEAN_KEY_ID" ]]; then
-    PARAMS="--key $DIGITALOCEAN_KEY_ID"
-fi
-dom droplet create $DROPLET_TPL $DROPLET_NAME --cloud-config $CLOUD_CONFIG $PARAMS #--dry-run
-#exit 0
+dom droplet create $DROPLET_TPL $DROPLET_NAME \
+    --key $DIGITALOCEAN_KEY_ID \
+    --cloud-config $CLOUD_CONFIG #--dry-run; exit 0
 
 # Run the session:
 # - Show droplet info

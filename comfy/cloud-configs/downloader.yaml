@@ -38,14 +38,13 @@ write_files:
           [[ -z "$URL" || "$URL" =~ ^# ]] && continue
 
           FILE_NAME=$(basename "$URL")
-          FILE_PATH="$DEST_DIR$FILE_NAME"
-
-          mkdir -p "$DEST_DIR"
+          FILE_PATH="$DEST_DIR$FILE_NAME" # DEST_DIR has / at the end
 
           if [ -f "$FILE_PATH" ]; then
               echo "--- Skipping $FILE_PATH (already exists)"
           else
               echo ">>> Downloading $FILE_PATH"
+              mkdir -p "$DEST_DIR"
               wget --quiet -c "$URL" -P "$DEST_DIR"
           fi
       done < $FILES_LIST
@@ -68,19 +67,29 @@ write_files:
   - path: /app/files_list.txt
     permissions: '0644'
     content: |
+      # ==============================================================================
+      # Alert: put / at the end of the destination directory
+      # ==============================================================================
+
       # Cosmos 1.0
+      # https://comfyanonymous.github.io/ComfyUI_examples/cosmos/
+      #
       https://huggingface.co/comfyanonymous/cosmos_1.0_text_encoder_and_VAE_ComfyUI/resolve/main/text_encoders/oldt5_xxl_fp8_e4m3fn_scaled.safetensors ./models/text_encoders/
       https://huggingface.co/comfyanonymous/cosmos_1.0_text_encoder_and_VAE_ComfyUI/resolve/main/vae/cosmos_cv8x8x8_1.0.safetensors ./models/vae/
       https://huggingface.co/mcmonkey/cosmos-1.0/resolve/main/Cosmos-1_0-Diffusion-7B-Text2World.safetensors ./models/diffusion_models/
       https://huggingface.co/mcmonkey/cosmos-1.0/resolve/main/Cosmos-1_0-Diffusion-7B-Video2World.safetensors ./models/diffusion_models/
 
       # Flux FP8 version
+      # https://comfyanonymous.github.io/ComfyUI_examples/flux/
+      #
       https://huggingface.co/Comfy-Org/flux1-dev/resolve/main/flux1-dev-fp8.safetensors ./models/checkpoints/
       https://huggingface.co/Comfy-Org/flux1-schnell/resolve/main/flux1-schnell-fp8.safetensors ./models/checkpoints/
       https://huggingface.co/black-forest-labs/FLUX.1-schnell/resolve/main/ae.safetensors ./models/vae/
       https://huggingface.co/comfyanonymous/flux_RealismLora_converted_comfyui/resolve/main/flux_realism_lora.safetensors ./models/lora/
 
-      # SDXL ReVision: https://comfyanonymous.github.io/ComfyUI_examples/sdxl/
+      # SDXL ReVision
+      # https://comfyanonymous.github.io/ComfyUI_examples/sdxl/
+      #
       https://huggingface.co/comfyanonymous/clip_vision_g/resolve/main/clip_vision_g.safetensors ./models/clip_vision/
 
 runcmd:
