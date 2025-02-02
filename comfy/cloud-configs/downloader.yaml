@@ -50,18 +50,16 @@ write_files:
       done < $FILES_LIST
       echo "--------------------------------------------------------"
       echo "All files downloaded!"
-      echo "--------------------------------------------------------"
-      tree
       echo
-      echo "Disk usage:"
-      du -sh /mnt
+      echo "Disk usage: $(du -sh /mnt)"
       echo
-      echo "Files in models dir:"
-      ls -l $BASE_DIR/models/**/*
+      echo "Models directory structure:"
       echo
+      tree models
+      echo
+      ls -lh $BASE_DIR/models/**/*
       echo "--------------------------------------------------------"
       echo "Downloader script finished!"
-      echo "--------------------------------------------------------"
   
   # Write the list of files to download
   - path: /app/files_list.txt

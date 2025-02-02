@@ -2,7 +2,7 @@
 
 ### [DOM](https://github.com/lvidarte/digitalocean-manager/) project with automations for:
 
-1. Starts an Nvidia H100 GPU droplet with [ComfyUI](https://github.com/comfyanonymous/ComfyUI) and the `models02` volume with some models.
+1. Starts an Nvidia H100 GPU droplet with [ComfyUI](https://github.com/comfyanonymous/ComfyUI) and the `models02` volume with AI models.
 
 ```bash
 ./run-comfy.sh
@@ -83,7 +83,7 @@ tail -f /var/log/cloud-init-output.log
 Cloud-init v. 24.1.3-0ubuntu1~22.04.5 running 'modules:config' at Sun, 02 Feb 2025 19:24:28 +0000. Up 24.81 seconds.
 Cloud-init v. 24.1.3-0ubuntu1~22.04.5 running 'modules:final' at Sun, 02 Feb 2025 19:24:33 +0000. Up 29.84 seconds.
 Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
-(more system stuff here)
+(lot of system stuff here)
 ```
 
 ### 3. Cloud-Init Configuration
@@ -92,21 +92,24 @@ If you choose to view the cloud-init output, you will see the configuration proc
 
 ```
 --------------------------------------------------------
-Clone ComfyUI and create symbolic links
+Clone ComfyUI and configure the workspace
 --------------------------------------------------------
 Cloning into '/app/ComfyUI'...
+Creating symbolic links to the models
+Creating symbolic link to the output directory
+Downloading Art Styles csv file with 300 prompt styles
+All set!
 --------------------------------------------------------
 Creating virtual environment
 --------------------------------------------------------
-(lot of stuff here)
-...
+
+(lot of python pip stuff here)
+
 --------------------------------------------------------
 Install custom nodes
 --------------------------------------------------------
->>> Install ComfyUI-Manager
-Cloning into 'ComfyUI-Manager'...
-Collecting GitPython (from -r requirements.txt (line 1))
-  Downloading GitPython-3.1.44-py3-none-any.whl.metadata (13 kB)
+>>> Installing custom node from https://github.com/ltdrdata/ComfyUI-Manager.git
+>>> Installing custom node from https://github.com/yolain/ComfyUI-Easy-Use.git
 (output for all nodes)
 ```
 
@@ -115,11 +118,21 @@ Collecting GitPython (from -r requirements.txt (line 1))
 Once the setup is complete, Comfy will start automatically.
 
 ```
---------------------------------------------------------
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+   ______                ____      __  ______
+  / ____/___  ____ ___  / __/_  __/ / / /  _/
+ / /   / __ \/ __ `__ \/ /_/ / / / / / // /  
+/ /___/ /_/ / / / / / / __/ /_/ / /_/ // /   
+\____/\____/_/ /_/ /_/_/  \__, /\____/___/   
+                         /____/              
+
 Running ComfyUI v0.3.13 from master
 
 Open http://162.243.65.216:5000 in your browser
---------------------------------------------------------
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 [START] Security scan
 [DONE] Security scan
 ## ComfyUI-Manager: installing dependencies done.
@@ -134,7 +147,8 @@ Open http://162.243.65.216:5000 in your browser
 ** Log path: /app/ComfyUI/user/comfyui.log
 
 Prestartup times for custom nodes:
-   3.4 seconds: /app/ComfyUI/custom_nodes/ComfyUI-Manager
+   0.0 seconds: /app/ComfyUI/custom_nodes/ComfyUI-Easy-Use
+   3.5 seconds: /app/ComfyUI/custom_nodes/ComfyUI-Manager
 
 Checkpoint files will always be loaded safely.
 Total VRAM 81008 MB, total RAM 241608 MB
@@ -153,9 +167,12 @@ Device: cuda:0 NVIDIA H100 80GB HBM3 : cudaMallocAsync
 
 Import times for custom nodes:
    0.0 seconds: /app/ComfyUI/custom_nodes/websocket_image_save.py
+   0.0 seconds: /app/ComfyUI/custom_nodes/ComfyUI-Styles_CSV_Loader
    0.1 seconds: /app/ComfyUI/custom_nodes/ComfyUI-KJNodes
    0.1 seconds: /app/ComfyUI/custom_nodes/ComfyUI-Manager
    0.1 seconds: /app/ComfyUI/custom_nodes/ComfyUI-VideoHelperSuite
+   0.5 seconds: /app/ComfyUI/custom_nodes/ComfyUI-Easy-Use
+   0.6 seconds: /app/ComfyUI/custom_nodes/ComfyUI-Was-Node-Suite
 
 Starting server
 
