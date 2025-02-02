@@ -20,9 +20,9 @@ write_files:
     permissions: '0755'
     content: |
       #!/bin/bash
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       echo "Clone ComfyUI and create symbolic links"
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       git clone https://github.com/comfyanonymous/ComfyUI /app/ComfyUI
 
       function create_symlink {
@@ -48,9 +48,9 @@ write_files:
     permissions: '0755'
     content: |
       #!/bin/bash
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       echo "Creating virtual environment"
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       cd /app/ComfyUI
       python3 -m venv .env
       source .env/bin/activate
@@ -96,12 +96,17 @@ write_files:
     permissions: '0755'
     content: |
       #!/bin/bash
-      echo "---------------------------------------"
-      echo "Running Comfy"
-      echo "---------------------------------------"
+      COMFY_IP=$(curl -s ifconfig.me)
+      COMFY_PORT=5000
+      COMFY_VERSION=$(grep '__version__' /app/ComfyUI/comfyui_version.py | sed -E 's/__version__ = "(.*)"/\1/')
+      echo "--------------------------------------------------------"
+      echo "Running ComfyUI v${COMFY_VERSION} from master"
+      echo
+      echo "Open http://${COMFY_IP}:${COMFY_PORT} in your browser"
+      echo "--------------------------------------------------------"
       cd /app/ComfyUI
       source .env/bin/activate
-      python3 main.py --listen=0.0.0.0 --port=5000
+      python3 main.py --listen=0.0.0.0 --port=$COMFY_PORT
 
 runcmd:
   # Launch comfy

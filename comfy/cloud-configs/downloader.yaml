@@ -15,11 +15,11 @@ write_files:
     permissions: '0755'
     content: |
       #!/bin/bash
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       echo "Create base dirs in /mnt"
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       mkdir -p /mnt/comfy/models
-      mkdir -p /mnt/comfy/ouput
+      mkdir -p /mnt/comfy/output
       echo "All set!"
 
   # Download the files
@@ -27,9 +27,9 @@ write_files:
     permissions: '0755'
     content: |
       #!/bin/bash
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       echo "Downloading files"
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       BASE_DIR="/mnt/comfy"
       FILES_LIST="/app/files_list.txt"
       cd $BASE_DIR
@@ -48,9 +48,9 @@ write_files:
               wget --quiet -c "$URL" -P "$DEST_DIR"
           fi
       done < $FILES_LIST
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       echo "All files downloaded!"
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       tree
       echo
       echo "Disk usage:"
@@ -59,9 +59,9 @@ write_files:
       echo "Files in models dir:"
       ls -l $BASE_DIR/models/**/*
       echo
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
       echo "Downloader script finished!"
-      echo "---------------------------------------"
+      echo "--------------------------------------------------------"
   
   # Write the list of files to download
   - path: /app/files_list.txt
