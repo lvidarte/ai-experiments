@@ -10,14 +10,26 @@ mounts:
   - [ "/dev/disk/by-id/scsi-0DO_Volume_models02", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
 
 write_files:
-  # Create the downloader script
+  # Create the base directories
+  - path: /app/create_base_dirs.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      echo "---------------------------------------"
+      echo "Create base dirs in /mnt"
+      echo "---------------------------------------"
+      mkdir -p /mnt/comfy/models
+      mkdir -p /mnt/comfy/ouput
+      echo "All set!"
+
+  # Download the files
   - path: /app/downloader.sh
     permissions: '0755'
     content: |
       #!/bin/bash
-      echo "-------------------------------------"
+      echo "---------------------------------------"
       echo "Downloading files"
-      echo "-------------------------------------"
+      echo "---------------------------------------"
       BASE_DIR="/mnt/comfy"
       FILES_LIST="/app/files_list.txt"
       cd $BASE_DIR
@@ -37,13 +49,22 @@ write_files:
               wget --quiet -c "$URL" -P "$DEST_DIR"
           fi
       done < $FILES_LIST
-      echo "-------------------------------------"
+      echo "---------------------------------------"
       echo "All files downloaded!"
-      echo "-------------------------------------"
+      echo "---------------------------------------"
       tree
+      echo
+      echo "Disk usage:"
       du -sh /mnt
+      echo
+      echo "Files in models dir:"
+      ls -l $BASE_DIR/models/**/*
+      echo
+      echo "---------------------------------------"
+      echo "Downloader script finished!"
+      echo "---------------------------------------"
   
-  # Create the files list
+  # Write the list of files to download
   - path: /app/files_list.txt
     permissions: '0644'
     content: |
@@ -63,7 +84,5 @@ write_files:
       https://huggingface.co/comfyanonymous/clip_vision_g/resolve/main/clip_vision_g.safetensors ./models/clip_vision/
 
 runcmd:
-  - mkdir -p /mnt/comfy/models
-  - mkdir -p /mnt/comfy/ouput
-  - mkdir -p /app
+  - /app/create_base_dirs.sh
   - /app/downloader.sh

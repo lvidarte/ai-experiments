@@ -15,80 +15,88 @@ mounts:
   - [ "/dev/disk/by-id/scsi-0DO_Volume_models02", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
 
 write_files:
-  # Create the virtual environment
-  - path: /usr/local/bin/create_env.sh
+  # Download ComfyUI and create symbolic links to the models
+  - path: /app/download_comfy.sh
     permissions: '0755'
     content: |
       #!/bin/bash
-      echo "-------------------------------------"
+      echo "---------------------------------------"
+      echo "Clone ComfyUI and create symbolic links"
+      echo "---------------------------------------"
+      git clone https://github.com/comfyanonymous/ComfyUI /app/ComfyUI
+
+      function create_symlink {
+          local dir="$1"
+          rm -r /app/ComfyUI/$dir && ln -s /mnt/comfy/$dir /app/ComfyUI/$dir
+      }
+
+      # Create symbolic links to the models
+      create_symlink "models/checkpoints"
+      create_symlink "models/clip_vision"
+      create_symlink "models/diffusion_models"
+      create_symlink "models/lora"
+      create_symlink "models/text_encoders"
+      create_symlink "models/vae"
+
+      # Create symbolic links to the output directory
+      create_symlink "output"
+
+  # Create the virtual environment
+  - path: /app/create_env.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      echo "---------------------------------------"
       echo "Creating virtual environment"
-      echo "-------------------------------------"
+      echo "---------------------------------------"
       cd /app/ComfyUI
       python3 -m venv .env
       source .env/bin/activate
       python3 -m pip install --upgrade pip
       python3 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
       python3 -m pip install -r requirements.txt
-      deactivate
 
   # Install custom nodes
-  - path: /usr/local/bin/install_custom_nodes.sh
+  - path: /app/install_custom_nodes.sh
     permissions: '0755'
     content: |
       #!/bin/bash
-      echo "-------------------------------------"
+      echo "---------------------------------------"
       echo "Install custom nodes"
-      echo "-------------------------------------"
+      echo "---------------------------------------"
       cd /app/ComfyUI
       python3 -m venv .env
-      #
+      
       # ComfyUI-Manager
       echo ">>> Install ComfyUI-Manager"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/ltdrdata/ComfyUI-Manager comfyui-manager
-      #
+      
       # ComfyUI-KJNodes
       echo ">>> Install ComfyUI-KJNodes"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/kijai/ComfyUI-KJNodes.git
-      #
+      
       # ComfyUI-VideoHelperSuite
       echo ">>> Install ComfyUI-VideoHelperSuite"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
 
   # Run comfy
-  - path: /usr/local/bin/run_comfy.sh
+  - path: /app/run_comfy.sh
     permissions: '0755'
     content: |
       #!/bin/bash
-      echo "-------------------------------------"
+      echo "---------------------------------------"
       echo "Running Comfy"
-      echo "-------------------------------------"
+      echo "---------------------------------------"
       cd /app/ComfyUI
       python3 -m venv .env
       python3 main.py --listen=0.0.0.0 --port=5000
-      deactivate
 
 runcmd:
-  # Create the /app directory
-  - mkdir -p /app
-
-  # Clone the repository from Stability AI
-  - git clone https://github.com/comfyanonymous/ComfyUI /app/ComfyUI
-
-  # Create symbolic links to the models
-  - DIR="checkpoints";      rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
-  - DIR="clip_vision";      rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
-  - DIR="diffusion_models"; rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
-  - DIR="lora";             rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
-  - DIR="text_encoders";    rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
-  - DIR="vae";              rm -r /app/ComfyUI/models/$DIR && ln -s /mnt/comfy/models/$DIR /app/ComfyUI/models/$DIR
-
-  # Create symbolic links to the output directory
-  - DIR="output"; rm -r /app/ComfyUI/$DIR && /mnt/comfy/$DIR /app/ComfyUI/$DIR
-
   # Launch comfy
-  - /usr/local/bin/create_env.sh
-  - /usr/local/bin/install_custom_nodes.sh
-  - /usr/local/bin/run_comfy.sh
+  - /app/download_comfy.sh
+  - /app/create_env.sh
+  - /app/install_custom_nodes.sh
+  - /app/run_comfy.sh
