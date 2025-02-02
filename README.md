@@ -15,19 +15,19 @@ bin/install.sh
 
 1. Before using the `dom` tool, you need to set up your DigitalOcean API token.  Export the `DIGITALOCEAN_TOKEN` environment variable with your token, ensuring it has the following permissions:
 
-- **actions**: read
-- **block_storage**: read, delete, create
-- **block_storage_action**: read, create
-- **droplet**: read, update, delete, create
-- **regions**: read
-- **sizes**: read
-- **tag**: create, read, delete
-- **ssh_key**: read
+  - **actions**: read
+  - **block_storage**: read, delete, create
+  - **block_storage_action**: read, create
+  - **droplet**: read, update, delete, create
+  - **regions**: read
+  - **sizes**: read
+  - **tag**: create, read, delete
+  - **ssh_key**: read
 
 2. For connecting with your droplets, you need to export:
 
-- `DIGITALOCEAN_IDENTITY_FILE` with the path to the private key file.
-- `DIGITALOCEAN_KEY_ID` with your key id (Use the command `dom key list` to finds your).
+  - `DIGITALOCEAN_IDENTITY_FILE` with the path to the private key file.
+  - `DIGITALOCEAN_KEY_ID` with your key id (Use the command `dom key list` to finds your).
 
 ---
 
