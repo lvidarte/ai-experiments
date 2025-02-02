@@ -27,14 +27,16 @@ write_files:
 
       function create_symlink {
           local dir="$1"
-          rm -r /app/ComfyUI/$dir && ln -s /mnt/comfy/$dir /app/ComfyUI/$dir
+
+          rm -rf /app/ComfyUI/$dir
+          ln -s /mnt/comfy/$dir /app/ComfyUI/$dir
       }
 
       # Create symbolic links to the models
       create_symlink "models/checkpoints"
       create_symlink "models/clip_vision"
       create_symlink "models/diffusion_models"
-      create_symlink "models/lora"
+      create_symlink "models/loras"
       create_symlink "models/text_encoders"
       create_symlink "models/vae"
 
@@ -65,22 +67,29 @@ write_files:
       echo "Install custom nodes"
       echo "---------------------------------------"
       cd /app/ComfyUI
-      python3 -m venv .env
+      source .env/bin/activate
       
       # ComfyUI-Manager
       echo ">>> Install ComfyUI-Manager"
       cd /app/ComfyUI/custom_nodes/
-      git clone https://github.com/ltdrdata/ComfyUI-Manager comfyui-manager
+      git clone https://github.com/ltdrdata/ComfyUI-Manager
+      cd ComfyUI-Manager
+      python3 -m pip install -r requirements.txt
+      python3 -m pip install uv # missing package, don't know why
       
       # ComfyUI-KJNodes
       echo ">>> Install ComfyUI-KJNodes"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/kijai/ComfyUI-KJNodes.git
+      cd ComfyUI-KJNodes
+      python3 -m pip install -r requirements.txt
       
       # ComfyUI-VideoHelperSuite
       echo ">>> Install ComfyUI-VideoHelperSuite"
       cd /app/ComfyUI/custom_nodes/
       git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
+      cd ComfyUI-VideoHelperSuite
+      python3 -m pip install -r requirements.txt
 
   # Run comfy
   - path: /app/run_comfy.sh
@@ -91,7 +100,7 @@ write_files:
       echo "Running Comfy"
       echo "---------------------------------------"
       cd /app/ComfyUI
-      python3 -m venv .env
+      source .env/bin/activate
       python3 main.py --listen=0.0.0.0 --port=5000
 
 runcmd:
