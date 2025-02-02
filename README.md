@@ -31,16 +31,16 @@ Also, for connecting with your droplets, you need to export the `DIGITALOCEAN_ID
 
 ## ComfyUI
 
-Starts an H100 droplet machine with ComfyUI and the `models02` volume with some models.
+Starts an Nvidia H100 GPU droplet with [ComfyUI](https://github.com/comfyanonymous/ComfyUI) and the `models02` volume with some models.
 
 ```bash
 cd comfy
 ./run-comfy.sh
 ```
 
-Starts an minimal cpu droplet for uploading models to the `models02` volume.
+Starts a minimal CPU droplet for downloading models into the `models02` volume.
 
 ```bash
 cd comfy
-./run-uploader.sh
+./run-downloader.sh
 ```
