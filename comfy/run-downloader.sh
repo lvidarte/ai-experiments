@@ -14,8 +14,17 @@ source ./session.sh
 # Activate the Python virtual environment
 source ../.env/bin/activate
 
+# ------------------
 # Create the droplet
-dom droplet create $DROPLET_TPL $DROPLET_NAME --cloud-config $CLOUD_CONFIG
+# ------------------
+# Export your SSH key ID to the environment variable DIGITALOCEAN_KEY_ID
+# Use the command `dom key list` to get the ID.
+PARAMS=""
+if [[ -n "$DIGITALOCEAN_KEY_ID" ]]; then
+    PARAMS="--key $DIGITALOCEAN_KEY_ID"
+fi
+dom droplet create $DROPLET_TPL $DROPLET_NAME --cloud-config $CLOUD_CONFIG $PARAMS #--dry-run
+#exit 0
 
 # Run the session:
 # - Show droplet info

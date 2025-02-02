@@ -13,8 +13,7 @@ bin/install.sh
 
 ## Prerequisites
 
-Before using the `dom` tool, you need to set up your DigitalOcean API token.  
-Export the `DIGITALOCEAN_TOKEN` environment variable with your token, ensuring it has the following permissions:
+1. Before using the `dom` tool, you need to set up your DigitalOcean API token.  Export the `DIGITALOCEAN_TOKEN` environment variable with your token, ensuring it has the following permissions:
 
 - **actions**: read
 - **block_storage**: read, delete, create
@@ -25,11 +24,16 @@ Export the `DIGITALOCEAN_TOKEN` environment variable with your token, ensuring i
 - **tag**: create, read, delete
 - **ssh_key**: read
 
-Also, for connecting with your droplets, you need to export the `DIGITALOCEAN_IDENTITY_FILE` with the path to the private key file.
+2. For connecting with your droplets, you need to export:
+
+- `DIGITALOCEAN_IDENTITY_FILE` with the path to the private key file.
+- `DIGITALOCEAN_KEY_ID` with your key id (Use the command `dom key list` to finds your).
 
 ---
 
-## ComfyUI
+## Current Projects
+
+### ComfyUI
 
 Starts an Nvidia H100 GPU droplet with [ComfyUI](https://github.com/comfyanonymous/ComfyUI) and the `models02` volume with some models.
 
