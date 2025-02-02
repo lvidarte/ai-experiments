@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+DROPLET_TYPE="gpu"
 DROPLET_TPL="nvidia-h100"
 DROPLET_NAME="comfy"
 CLOUD_CONFIG="comfy"

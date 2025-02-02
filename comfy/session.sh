@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# ============================================
+# ================================================
 # ALERT: Don't run this file directly.
-# Use this file by sourcing it in your script.
-# ============================================
+# Use this file by sourcing it in your run script.
+# ================================================
 
 DROPLET_ID=""
 DROPLET_IP=""
@@ -18,7 +18,7 @@ function echo_separator() {
 # Get the IP address of the new droplet
 function get_droplet_id() {
     if [ "$DROPLET_ID" == "" ]; then
-        DROPLET_ID=$(dom droplet list | grep $DROPLET_NAME | sed -n 's/^ID: \([^,]*\).*/\1/p')
+        DROPLET_ID=$(dom droplet list --droplet-type $DROPLET_TYPE | grep $DROPLET_NAME | sed -n 's/^ID: \([^,]*\).*/\1/p')
     fi
 
     if [ "$DROPLET_ID" == "" ]; then
@@ -32,7 +32,7 @@ function get_droplet_id() {
 # Get the IP address of the new droplet
 function get_droplet_ip() {
     if [ "$DROPLET_IP" == "" ]; then
-        DROPLET_IP=$(dom droplet list | grep $DROPLET_NAME | sed -n 's/.*PublicIP: \([^,]*\).*/\1/p')
+        DROPLET_IP=$(dom droplet list --droplet-type $DROPLET_TYPE | grep $DROPLET_NAME | sed -n 's/.*PublicIP: \([^,]*\).*/\1/p')
     fi
 
     if [[ -z "$DROPLET_IP" || "$DROPLET_IP" == "None" ]]; then
@@ -125,6 +125,7 @@ function droplet_connection_option() {
     fi
 }
 
+# Delete the new droplet
 function droplet_delete_option() {
     local droplet_id=$(get_droplet_id)
 
@@ -141,6 +142,7 @@ function droplet_delete_option() {
     fi
 }
 
+# Run the whole session
 function run_session() {
     show_droplet_info
     droplet_logs_option

@@ -1,6 +1,7 @@
 #!/bin/bash
 #set -e
 
+DROPLET_TYPE="cpu"
 DROPLET_TPL="cpu-mini"
 DROPLET_NAME="downloader"
 CLOUD_CONFIG="downloader"
