@@ -18,7 +18,7 @@
 
 ## Prerequisites
 
-1. Install dom from the root of the repository:
+1. Install `dom` from the root of the repository:
 
 ```bash
 bin/install.sh
