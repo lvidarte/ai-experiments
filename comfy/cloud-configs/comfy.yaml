@@ -138,6 +138,7 @@ write_files:
 
       install_custom_node https://github.com/ltdrdata/ComfyUI-Manager.git "ComfyUI-Manager" "uv"
       install_custom_node https://github.com/yolain/ComfyUI-Easy-Use.git "ComfyUI-Easy-Use"
+      install_custom_node https://github.com/crystian/ComfyUI-Crystools.git "ComfyUI-Crystools"
       install_custom_node https://github.com/kijai/ComfyUI-KJNodes.git "ComfyUI-KJNodes"
       install_custom_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git "ComfyUI-VideoHelperSuite"
       install_custom_node https://github.com/theUpsider/ComfyUI-Styles_CSV_Loader.git "ComfyUI-Styles_CSV_Loader"
