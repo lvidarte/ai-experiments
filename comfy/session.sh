@@ -124,6 +124,7 @@ function show_droplet_cloud_init_logs() {
 
     trap '' SIGINT
     $ssh_cmd -t "tail -f $CONFIG_INIT_LOG"
+    trap SIGINT
 }
 
 # Connect to the new droplet
@@ -138,8 +139,10 @@ function droplet_connection_option() {
 
     read -p "Do you want to connect to the droplet using ssh? (Y/n): " choice
     if [[ ! "$choice" =~ ^[Nn]$ ]]; then
+        wait_for_ssh
         trap '' SIGINT
         $ssh_cmd
+        trap SIGINT
     fi
 }
 
@@ -155,8 +158,10 @@ function droplet_delete_option() {
 
     read -p "Do you want to delete the droplet? (Y/n): " choice
     if [[ ! "$choice" =~ ^[Nn]$ ]]; then
-        dom droplet delete $droplet_id
-        echo "Droplet deleted."
+        echo "Stopping the droplet to collect logs before deleting..."
+        dom droplet stop $droplet_id \
+          && dom droplet delete $droplet_id \
+          && echo "Droplet deleted."
     fi
 }
 

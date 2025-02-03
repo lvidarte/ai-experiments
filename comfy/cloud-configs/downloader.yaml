@@ -3,13 +3,41 @@ package_update: true
 packages:
   - git
   - tree
-  - htop
-  - wget
 
 mounts:
   - [ "/dev/disk/by-id/scsi-0DO_Volume_models02", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
 
 write_files:
+  # Sytemd service to collect logs before unmounting /mnt
+  - path: /etc/systemd/system/shutdown-log.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Collect logs before unmounting /mnt
+      DefaultDependencies=no
+      Before=umount.target
+      After=final.target
+      RequiresMountsFor=/mnt
+
+      [Service]
+      Type=oneshot
+      ExecStart=/app/shutdown_log.sh
+      RemainAfterExit=yes
+
+      [Install]
+      WantedBy=multi-user.target
+
+  # Script to collect logs before unmounting /mnt
+  - path: /app/shutdown_log.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      DST_DIR="/mnt/downloader"
+      SRC_FILE="/var/log/cloud-init-output.log"
+      DST_FILE="${DST_DIR}/$(date +"%Y-%m-%d_%H-%M-%S")_cloud-init-output.log"
+      mkdir -p $DST_DIR
+      cp $SRC_FILE $DST_FILE
+
   # Create the base directories
   - path: /app/create_base_dirs.sh
     permissions: '0755'
@@ -94,5 +122,7 @@ write_files:
       https://huggingface.co/comfyanonymous/clip_vision_g/resolve/main/clip_vision_g.safetensors ./models/clip_vision/
 
 runcmd:
+  - systemctl daemon-reload
+  - systemctl enable shutdown-log.service
   - /app/create_base_dirs.sh
   - /app/downloader.sh

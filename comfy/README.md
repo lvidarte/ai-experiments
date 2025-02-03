@@ -52,7 +52,6 @@ Begin by starting the process. This will create a GPU droplet with the `models02
 $ ./run-comfy.sh 
 ID: 473968455, Name: comfy, Region: nyc2, Memory: 245760, VCPUs: 20, Disk: 720, Status: new, PublicIP: None
 ActionID: 2502637691, Status: in-progress, Type: create, StartedAt: 2025-02-02T19:22:49Z, CompletedAt: None
-(repeated output while droplet starts)
 ActionID: 2502637691, Status: completed, Type: create, StartedAt: 2025-02-02T19:22:49Z, CompletedAt: 2025-02-02T19:23:46Z
 ----------------------------------------------------------------
 Droplet already created!
@@ -209,7 +208,10 @@ Delete the droplet using
 
 dom droplet delete 
 ----------------------------------------------------------------
-Do you want to delete the droplet? (Y/n): 
+Do you want to delete the droplet? (Y/n):
+Stopping the droplet to collect logs before deleting...
+ActionID: 2503121033, Status: in-progress, Type: shutdown, StartedAt: 2025-02-03T04:46:03Z, CompletedAt: None
+ActionID: 2503121033, Status: completed, Type: shutdown, StartedAt: 2025-02-03T04:46:03Z, CompletedAt: 2025-02-03T04:46:09Z
 Droplet deleted.
 Session ended.
 ```

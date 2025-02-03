@@ -6,15 +6,41 @@ packages:
   - python3-venv
   - python3-pip
   - tree
-  - htop
   - libgl1
   - ffmpeg
-  - wget
 
 mounts:
   - [ "/dev/disk/by-id/scsi-0DO_Volume_models02", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
 
 write_files:
+  # Sytemd service to collect logs before unmounting /mnt
+  - path: /etc/systemd/system/shutdown-log.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Collect logs before unmounting /mnt
+      DefaultDependencies=no
+      Before=umount.target
+      After=final.target
+      RequiresMountsFor=/mnt
+
+      [Service]
+      Type=oneshot
+      ExecStart=/app/shutdown_log.sh
+      RemainAfterExit=yes
+
+      [Install]
+      WantedBy=multi-user.target
+
+  # Script to collect logs before unmounting /mnt
+  - path: /app/shutdown_log.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      LOG_FILE="/var/log/cloud-init-output.log"
+      DEST_DIR="/app/ComfyUI/output/"
+      cp $LOG_FILE $DEST_DIR
+
   # Download ComfyUI and create symbolic links to the models
   - path: /app/download_comfy.sh
     permissions: '0755'
@@ -26,10 +52,18 @@ write_files:
       git clone https://github.com/comfyanonymous/ComfyUI /app/ComfyUI
 
       function create_symlink {
-          local dir="$1"
+          local src="$1"
+          local dst="${2:-$1}"
 
-          rm -rf /app/ComfyUI/$dir
-          ln -s /mnt/comfy/$dir /app/ComfyUI/$dir
+          rm -rf /app/ComfyUI/$dst
+          ln -s /mnt/comfy/$src /app/ComfyUI/$dst
+      }
+
+      function create_output_dir {
+          local output_dir="output/$(date '+%Y-%m-%d_%H-%M-%S')"
+
+          mkdir -p /mnt/comfy/$output_dir
+          echo $output_dir
       }
 
       echo "Creating symbolic links to the models"
@@ -40,8 +74,9 @@ write_files:
       create_symlink "models/text_encoders"
       create_symlink "models/vae"
 
-      echo "Creating symbolic link to the output directory"
-      create_symlink "output"
+      OUTPUT_DIR=$(create_output_dir)
+      echo "Creating symbolic link to the output dir /mnt/comfy/$OUTPUT_DIR"
+      create_symlink "$OUTPUT_DIR" "output"
 
       # https://www.youtube.com/watch?v=cmikc-Jo1gk
       # https://www.youtube.com/watch?v=Xsx-u0OMezw
@@ -133,7 +168,8 @@ write_files:
       python3 main.py --listen=0.0.0.0 --port=$COMFY_PORT
 
 runcmd:
-  # Launch comfy
+  - systemctl daemon-reload
+  - systemctl enable shutdown-log.service
   - /app/download_comfy.sh
   - /app/create_env.sh
   - /app/install_custom_nodes.sh
