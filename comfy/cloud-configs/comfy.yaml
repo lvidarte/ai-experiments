@@ -141,8 +141,11 @@ write_files:
       install_custom_node https://github.com/crystian/ComfyUI-Crystools.git "ComfyUI-Crystools"
       install_custom_node https://github.com/kijai/ComfyUI-KJNodes.git "ComfyUI-KJNodes"
       install_custom_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git "ComfyUI-VideoHelperSuite"
-      install_custom_node https://github.com/theUpsider/ComfyUI-Styles_CSV_Loader.git "ComfyUI-Styles_CSV_Loader"
+      install_custom_node https://github.com/theUpsider/ComfyUI-Styles_CSV_Loader.git "ComfyUI-Styles-CSV-Loader"
       install_custom_node https://github.com/WASasquatch/was-node-suite-comfyui.git "ComfyUI-Was-Node-Suite"
+      install_custom_node https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git "ComfyUI-Custom-Scripts"
+      install_custom_node https://github.com/chflame163/ComfyUI_LayerStyle.git "ComfyUI-LayerStyle"
+      install_custom_node https://github.com/heshengtao/comfyui_LLM_party.git "ComfyUI-LLM-Party"
 
   # Run comfy
   - path: /app/run_comfy.sh
