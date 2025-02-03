@@ -47,7 +47,6 @@ write_files:
       echo "Create base dirs in /mnt"
       echo "--------------------------------------------------------"
       mkdir -p /mnt/comfy/models
-      mkdir -p /mnt/comfy/output
       echo "All set!"
 
   # Download the files

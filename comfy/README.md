@@ -95,7 +95,7 @@ Clone ComfyUI and configure the workspace
 --------------------------------------------------------
 Cloning into '/app/ComfyUI'...
 Creating symbolic links to the models
-Creating symbolic link to the output directory
+Creating symbolic links to the session
 Downloading Art Styles csv file with 300 prompt styles
 All set!
 --------------------------------------------------------

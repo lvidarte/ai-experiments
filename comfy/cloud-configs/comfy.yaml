@@ -38,7 +38,7 @@ write_files:
     content: |
       #!/bin/bash
       LOG_FILE="/var/log/cloud-init-output.log"
-      DEST_DIR="/app/ComfyUI/output/"
+      DEST_DIR="/app/ComfyUI/logs/"
       cp $LOG_FILE $DEST_DIR
 
   # Download ComfyUI and create symbolic links to the models
@@ -59,11 +59,13 @@ write_files:
           ln -s /mnt/comfy/$src /app/ComfyUI/$dst
       }
 
-      function create_output_dir {
-          local output_dir="output/$(date '+%Y-%m-%d_%H-%M-%S')"
+      function create_session_dir {
+          local session_dir="sessions/$(date '+%Y-%m-%d_%H-%M-%S')"
 
-          mkdir -p /mnt/comfy/$output_dir
-          echo $output_dir
+          mkdir -p /mnt/comfy/$session_dir/output
+          mkdir -p /mnt/comfy/$session_dir/user
+          mkdir -p /mnt/comfy/$session_dir/logs
+          echo $session_dir
       }
 
       echo "Creating symbolic links to the models"
@@ -74,9 +76,11 @@ write_files:
       create_symlink "models/text_encoders"
       create_symlink "models/vae"
 
-      OUTPUT_DIR=$(create_output_dir)
-      echo "Creating symbolic link to the output dir /mnt/comfy/$OUTPUT_DIR"
-      create_symlink "$OUTPUT_DIR" "output"
+      SESSION_DIR=$(create_session_dir)
+      echo "Creating symbolic links to the session in $SESSION_DIR"
+      create_symlink "$SESSION_DIR/output" "output"
+      create_symlink "$SESSION_DIR/user" "user"
+      create_symlink "$SESSION_DIR/logs" "logs"
 
       # https://www.youtube.com/watch?v=cmikc-Jo1gk
       # https://www.youtube.com/watch?v=Xsx-u0OMezw
