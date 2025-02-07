@@ -9,9 +9,7 @@ protected_droplets: []
 
 # List of (str) protected volumes IDs.
 # You can't delete a protected volume.
-protected_volumes: [
-  "b323e810-e0b7-11ef-8b87-0a58ac140002", # models02
-]
+protected_volumes: []
 
 # JSON indentation level (int) for raw outputs.
 json_indent: 4
