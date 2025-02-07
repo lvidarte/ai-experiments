@@ -1,7 +1,7 @@
 {
     "name": null,
     "size_gigabytes": 500,
-    "description": "Models volume",
+    "description": "AI Models",
     "region": null,
     "filesystem_type": "ext4",
     "filesystem_label": "models"
