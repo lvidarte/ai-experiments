@@ -48,3 +48,9 @@ Starts a minimal CPU droplet for downloading models into the `models02` volume.
 cd comfy
 ./run-downloader.sh
 ```
+
+---
+
+## License
+
+This project is licensed under the Apache License 2.0. See the `LICENSE` file for details.
