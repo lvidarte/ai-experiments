@@ -13,7 +13,27 @@ mounts:
   - [ "/dev/disk/by-id/scsi-0DO_Volume_models02", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
 
 write_files:
-  # Sytemd service to collect logs before unmounting /mnt
+  # Systemd service to run Ollama
+  - path: /etc/systemd/system/ollama.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Ollama Service
+      After=network-online.target
+
+      [Service]
+      Environment="HOME=/usr/share/ollama"
+      ExecStart=/usr/bin/ollama serve
+      User=ollama
+      Group=ollama
+      Restart=always
+      RestartSec=3
+      Environment="PATH=$PATH"
+
+      [Install]
+      WantedBy=default.target
+
+  # Systemd service to collect logs before unmounting /mnt
   - path: /etc/systemd/system/shutdown-log.service
     permissions: '0644'
     content: |
@@ -32,6 +52,38 @@ write_files:
       [Install]
       WantedBy=multi-user.target
 
+  # Script to install Ollama
+  - path: /app/install_ollama.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      echo "--------------------------------------------------------"
+      echo "Install Ollama service"
+      echo "--------------------------------------------------------"
+      curl -fsSL https://ollama.com/install.sh | sh
+
+      # Create a user and group for Ollama
+      useradd -r -s /bin/false -U -m -d /usr/share/ollama ollama
+      usermod -a -G ollama $(whoami)
+
+      # Enable/Start the service
+      systemctl daemon-reload
+      systemctl enable ollama
+      echo "--------------------------------------------------------"
+      echo "Ollama start"
+      echo "--------------------------------------------------------"
+      sleep 5
+      systemctl start ollama
+      sleep 5
+      systemctl status ollama
+
+      # Pull models
+      echo "--------------------------------------------------------"
+      echo "Pull models"
+      echo "--------------------------------------------------------"
+      ollama pull deepseek-r1:70b # 43 GB
+      ollama pull llama3.3 # 43 GB
+
   # Script to collect logs before unmounting /mnt
   - path: /app/shutdown_log.sh
     permissions: '0755'
@@ -41,7 +93,18 @@ write_files:
       DEST_DIR="/app/ComfyUI/logs/"
       cp $LOG_FILE $DEST_DIR
 
-  # Download ComfyUI and create symbolic links to the models
+  # Script to enable shutdown-log service
+  - path: /app/enable_shutdown_service.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      echo "--------------------------------------------------------"
+      echo "Enable shutdown-log service"
+      echo "--------------------------------------------------------"
+      systemctl daemon-reload
+      systemctl enable shutdown-log.service
+
+  # Script to download ComfyUI and create symbolic links to the models
   - path: /app/download_comfy.sh
     permissions: '0755'
     content: |
@@ -91,7 +154,7 @@ write_files:
 
       echo "All set!"
 
-  # Create the virtual environment
+  # Script to create the virtual environment
   - path: /app/create_env.sh
     permissions: '0755'
     content: |
@@ -107,7 +170,7 @@ write_files:
       python3 -m pip install -r requirements.txt
       python3 -m pip install sageattention
 
-  # Install custom nodes
+  # Script to install custom nodes
   - path: /app/install_custom_nodes.sh
     permissions: '0755'
     content: |
@@ -156,7 +219,7 @@ write_files:
       install_custom_node https://github.com/un-seen/comfyui-tensorops.git "ComfyUI-TensorOps"
       install_custom_node https://github.com/stavsap/comfyui-ollama.git "ComfyUI-Ollama"
 
-  # Run comfy
+  # Script to run comfyui
   - path: /app/run_comfy.sh
     permissions: '0755'
     content: |
@@ -185,8 +248,8 @@ write_files:
       python3 main.py --listen=0.0.0.0 --port=$COMFY_PORT
 
 runcmd:
-  - systemctl daemon-reload
-  - systemctl enable shutdown-log.service
+  - /app/enable_shutdown_service.sh
+  - /app/install_ollama.sh
   - /app/download_comfy.sh
   - /app/create_env.sh
   - /app/install_custom_nodes.sh

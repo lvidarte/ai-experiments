@@ -8,7 +8,7 @@ mounts:
   - [ "/dev/disk/by-id/scsi-0DO_Volume_models02", "/mnt", "ext4", "defaults,nofail,discard", "0", "0" ]
 
 write_files:
-  # Sytemd service to collect logs before unmounting /mnt
+  # Systemd service to collect logs before unmounting /mnt
   - path: /etc/systemd/system/shutdown-log.service
     permissions: '0644'
     content: |
@@ -38,7 +38,18 @@ write_files:
       mkdir -p $DST_DIR
       cp $SRC_FILE $DST_FILE
 
-  # Create the base directories
+  # Script to enable shutdown-log service
+  - path: /app/enable_shutdown_service.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      echo "--------------------------------------------------------"
+      echo "Enable shutdown-log service"
+      echo "--------------------------------------------------------"
+      systemctl daemon-reload
+      systemctl enable shutdown-log.service
+
+  # Script to create the base directories
   - path: /app/create_base_dirs.sh
     permissions: '0755'
     content: |
@@ -49,7 +60,7 @@ write_files:
       mkdir -p /mnt/comfy/models
       echo "All set!"
 
-  # Download the files
+  # Script to download the files
   - path: /app/downloader.sh
     permissions: '0755'
     content: |
@@ -92,11 +103,13 @@ write_files:
       echo "--------------------------------------------------------"
       echo "Downloader script finished!"
   
-  # Write the list of files to download
+  # List of the files to download
   - path: /app/files_list.txt
     permissions: '0644'
     content: |
       # ====================================================
+      # Format: URL DEST_DIR/ [NEW_NAME]
+      #
       # Alert: put / at the end of the destination directory
       # ====================================================
 
@@ -132,7 +145,6 @@ write_files:
       https://huggingface.co/Lightricks/LTX-Video/resolve/main/ltx-video-2b-v0.9.1.safetensors ./models/checkpoints/
 
 runcmd:
-  - systemctl daemon-reload
-  - systemctl enable shutdown-log.service
+  - /app/enable_shutdown_service.sh
   - /app/create_base_dirs.sh
   - /app/downloader.sh
