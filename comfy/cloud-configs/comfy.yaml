@@ -70,7 +70,9 @@ write_files:
 
       echo "Creating symbolic links to the models"
       create_symlink "models/checkpoints"
+      create_symlink "models/clip"
       create_symlink "models/clip_vision"
+      create_symlink "models/controlnet"
       create_symlink "models/diffusion_models"
       create_symlink "models/loras"
       create_symlink "models/text_encoders"
@@ -103,6 +105,7 @@ write_files:
       python3 -m pip install --upgrade pip
       python3 -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
       python3 -m pip install -r requirements.txt
+      python3 -m pip install sageattention
 
   # Install custom nodes
   - path: /app/install_custom_nodes.sh
@@ -146,6 +149,12 @@ write_files:
       install_custom_node https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git "ComfyUI-Custom-Scripts"
       install_custom_node https://github.com/chflame163/ComfyUI_LayerStyle.git "ComfyUI-LayerStyle"
       install_custom_node https://github.com/heshengtao/comfyui_LLM_party.git "ComfyUI-LLM-Party"
+      install_custom_node https://github.com/kijai/ComfyUI-Florence2.git "ComfyUI-Florence2"
+      install_custom_node https://github.com/cubiq/ComfyUI_essentials.git "ComfyUI-Essentials"
+      install_custom_node https://github.com/EnragedAntelope/ComfyUI-ConstrainResolution.git "ComfyUI-ConstrainResolution"
+      install_custom_node https://github.com/chibiace/ComfyUI-Chibi-Nodes.git "ComfyUI-Chibi-Nodes"
+      install_custom_node https://github.com/un-seen/comfyui-tensorops.git "ComfyUI-TensorOps"
+      install_custom_node https://github.com/stavsap/comfyui-ollama.git "ComfyUI-Ollama"
 
   # Run comfy
   - path: /app/run_comfy.sh
