@@ -139,6 +139,7 @@ write_files:
       #
       https://huggingface.co/comfyanonymous/clip_vision_g/resolve/main/clip_vision_g.safetensors ./models/clip_vision/
       https://huggingface.co/xinsir/controlnet-union-sdxl-1.0/resolve/main/diffusion_pytorch_model_promax.safetensors ./models/controlnet/
+      https://huggingface.co/Comfy-Org/stable-diffusion-v1-5-archive/resolve/main/v1-5-pruned-emaonly-fp16.safetensors ./models/checkpoints/
 
       # LTX-Video
       https://huggingface.co/Lightricks/LTX-Video/resolve/main/ltx-video-2b-v0.9.safetensors ./models/checkpoints/

@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+VOLUME_TPL="models"
+VOLUME_NAME="models02"
+
 DROPLET_TYPE="cpu"
 DROPLET_TPL="cpu-mini"
 DROPLET_NAME="downloader"
@@ -26,10 +29,17 @@ source ./session.sh
 source ../.env/bin/activate
 
 # ------------------
+# Create the volume
+# ------------------
+#dom volume create $VOLUME_TPL $VOLUME_NAME #--dry-run; exit 0
+VOLUME_ID=$(get_volume_id) || exit 1
+
+# ------------------
 # Create the droplet
 # ------------------
 dom droplet create $DROPLET_TPL $DROPLET_NAME \
     --key $DIGITALOCEAN_KEY_ID \
+    --volume-id $VOLUME_ID \
     --cloud-config $CLOUD_CONFIG #--dry-run; exit 0
 
 # Run the session:

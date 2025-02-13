@@ -19,25 +19,25 @@
 # Use this file by sourcing it in your run script.
 # ================================================
 
-DROPLET_ID=""
-DROPLET_IP=""
-SSH_CMD=""
-CONFIG_INIT_LOG="/var/log/cloud-init-output.log"
-
+_CONFIG_INIT_LOG="/var/log/cloud-init-output.log"
+_VOLUME_ID=""
+_DROPLET_ID=""
+_DROPLET_IP=""
+_SSH_CMD=""
 
 # Check if the required environment variables are set
 if [ -z "$DIGITALOCEAN_TOKEN" ]; then
-    echo "DIGITALOCEAN_TOKEN is not set."
+    echo "DIGITALOCEAN_TOKEN is not set." >&2
     exit 1
 fi
 
 if [ -z "$DIGITALOCEAN_KEY_ID" ]; then
-    echo "DIGITALOCEAN_KEY_ID is not set."
+    echo "DIGITALOCEAN_KEY_ID is not set." >&2
     exit 1
 fi
 
 if [ -z "$DIGITALOCEAN_IDENTITY_FILE" ]; then
-    echo "DIGITALOCEAN_IDENTITY_FILE is not set."
+    echo "DIGITALOCEAN_IDENTITY_FILE is not set." >&2
     exit 1
 fi
 
@@ -47,42 +47,56 @@ function echo_separator() {
     echo "----------------------------------------------------------------"
 }
 
-# Get the IP address of the new droplet
-function get_droplet_id() {
-    if [ "$DROPLET_ID" == "" ]; then
-        DROPLET_ID=$(dom droplet list --droplet-type $DROPLET_TYPE | grep $DROPLET_NAME | sed -n 's/^ID: \([^,]*\).*/\1/p')
+# Get the ID of the volume by name
+function get_volume_id() {
+    if [ "$_VOLUME_ID" == "" ]; then
+        _VOLUME_ID=$(dom volume list | grep "Name: $VOLUME_NAME" | sed -n 's/^ID: \([^,]*\).*/\1/p')
     fi
 
-    if [ "$DROPLET_ID" == "" ]; then
-        echo "Failed to get the droplet ID."
-        exit 1
+    if [ "$_VOLUME_ID" == "" ]; then
+        echo "Failed to get the volume ID for '${VOLUME_NAME}'." >&2 
+        return 1
     fi
-    
-    echo "$DROPLET_ID"
+
+    echo "$_VOLUME_ID"
 }
 
-# Get the IP address of the new droplet
-function get_droplet_ip() {
-    if [ "$DROPLET_IP" == "" ]; then
-        DROPLET_IP=$(dom droplet list --droplet-type $DROPLET_TYPE | grep $DROPLET_NAME | sed -n 's/.*PublicIP: \([^,]*\).*/\1/p')
+# Get the ID of the droplet by name
+function get_droplet_id() {
+    if [ "$_DROPLET_ID" == "" ]; then
+        _DROPLET_ID=$(dom droplet list --droplet-type $DROPLET_TYPE | grep "Name: $DROPLET_NAME" | sed -n 's/^ID: \([^,]*\).*/\1/p')
     fi
 
-    if [[ -z "$DROPLET_IP" || "$DROPLET_IP" == "None" ]]; then
-        echo "Failed to get droplet IP address."
-        exit 1
+    if [ "$_DROPLET_ID" == "" ]; then
+        echo "Failed to get the droplet ID for '${DROPLET_NAME}'." >&2
+        return 1
+    fi
+
+    echo "$_DROPLET_ID"
+}
+
+# Get the IP address of the droplet by name
+function get_droplet_ip() {
+    if [ "$_DROPLET_IP" == "" ]; then
+        _DROPLET_IP=$(dom droplet list --droplet-type $DROPLET_TYPE | grep "Name: $DROPLET_NAME" | sed -n 's/.*PublicIP: \([^,]*\).*/\1/p')
+    fi
+
+    if [[ -z "$_DROPLET_IP" || "$_DROPLET_IP" == "None" ]]; then
+        echo "Failed to get droplet IP address for '${DROPLET_NAME}'." >&2
+        return 1
     fi
     
-    echo "$DROPLET_IP"
+    echo "$_DROPLET_IP"
 }
 
 # Get the SSH command to connect to the new droplet
 function get_ssh_cmd() {
-    if [ "$SSH_CMD" == "" ]; then
+    if [ "$_SSH_CMD" == "" ]; then
         local droplet_ip=$(get_droplet_ip)
-        SSH_CMD="ssh -i $DIGITALOCEAN_IDENTITY_FILE root@$droplet_ip"
+        _SSH_CMD="ssh -i $DIGITALOCEAN_IDENTITY_FILE root@$droplet_ip"
     fi
 
-    echo "$SSH_CMD"
+    echo "$_SSH_CMD"
 }
 
 # Show the information about the new droplet
@@ -133,11 +147,11 @@ function show_droplet_cloud_init_logs() {
     echo_separator
     echo "Showing logs from cloud-init"
     echo
-    echo "tail -f $CONFIG_INIT_LOG"
+    echo "tail -f $_CONFIG_INIT_LOG"
     echo_separator
 
     trap '' SIGINT
-    $ssh_cmd -t "tail -f $CONFIG_INIT_LOG"
+    $ssh_cmd -t "tail -f $_CONFIG_INIT_LOG"
     trap SIGINT
 }
 
