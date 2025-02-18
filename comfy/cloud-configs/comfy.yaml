@@ -219,6 +219,7 @@ write_files:
       install_custom_node https://github.com/chibiace/ComfyUI-Chibi-Nodes.git "ComfyUI-Chibi-Nodes"
       install_custom_node https://github.com/un-seen/comfyui-tensorops.git "ComfyUI-TensorOps"
       install_custom_node https://github.com/stavsap/comfyui-ollama.git "ComfyUI-Ollama"
+      install_custom_node https://github.com/Lightricks/ComfyUI-LTXVideo "ComfyUI-LTXVideo"
 
   # Script to run comfyui
   - path: /app/run_comfy.sh
