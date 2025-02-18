@@ -49,6 +49,11 @@ function echo_separator() {
 
 # Get the ID of the volume by name
 function get_volume_id() {
+    if [ -z "$VOLUME_NAME" ]; then
+        echo "VOLUME_NAME is not set." >&2
+        return 1
+    fi
+
     if [ "$_VOLUME_ID" == "" ]; then
         _VOLUME_ID=$(dom volume list | grep "Name: $VOLUME_NAME" | sed -n 's/^ID: \([^,]*\).*/\1/p')
     fi
@@ -63,6 +68,16 @@ function get_volume_id() {
 
 # Get the ID of the droplet by name
 function get_droplet_id() {
+    if [ -z "$DROPLET_TYPE" ]; then
+        echo "DROPLET_TYPE is not set." >&2
+        return 1
+    fi
+
+    if [ -z "$DROPLET_NAME" ]; then
+        echo "DROPLET_NAME is not set." >&2
+        return 1
+    fi
+
     if [ "$_DROPLET_ID" == "" ]; then
         _DROPLET_ID=$(dom droplet list --droplet-type $DROPLET_TYPE | grep "Name: $DROPLET_NAME" | sed -n 's/^ID: \([^,]*\).*/\1/p')
     fi
@@ -77,6 +92,16 @@ function get_droplet_id() {
 
 # Get the IP address of the droplet by name
 function get_droplet_ip() {
+    if [ -z "$DROPLET_TYPE" ]; then
+        echo "DROPLET_TYPE is not set." >&2
+        return 1
+    fi
+
+    if [ -z "$DROPLET_NAME" ]; then
+        echo "DROPLET_NAME is not set." >&2
+        return 1
+    fi
+
     if [ "$_DROPLET_IP" == "" ]; then
         _DROPLET_IP=$(dom droplet list --droplet-type $DROPLET_TYPE | grep "Name: $DROPLET_NAME" | sed -n 's/.*PublicIP: \([^,]*\).*/\1/p')
     fi
