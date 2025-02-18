@@ -28,9 +28,9 @@ source ./session.sh
 # Activate the Python virtual environment
 source ../.env/bin/activate
 
-# ------------------
-# Create the volume
-# ------------------
+# ----------------------------
+# Create and get the volume ID
+# ----------------------------
 #dom volume create $VOLUME_TPL $VOLUME_NAME #--dry-run; exit 0
 VOLUME_ID=$(get_volume_id) || exit 1
 
