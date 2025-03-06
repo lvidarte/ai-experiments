@@ -135,11 +135,11 @@ write_files:
       echo "Creating symbolic links to the models"
       create_symlink "models/checkpoints"
       create_symlink "models/clip"
-      create_symlink "models/clip_vision"
-      create_symlink "models/controlnet"
+      #create_symlink "models/clip_vision"
+      #create_symlink "models/controlnet"
       create_symlink "models/diffusion_models"
-      create_symlink "models/loras"
-      create_symlink "models/text_encoders"
+      #create_symlink "models/loras"
+      #create_symlink "models/text_encoders"
       create_symlink "models/vae"
 
       SESSION_DIR=$(create_session_dir)
